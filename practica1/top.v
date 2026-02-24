@@ -1,13 +1,16 @@
+//A01639462
+//Sophia Leñero Gómez
 module top(
     input [3:0] SW,
     output [0:0] LEDR
 );
 
-    num_prim #(.N(4)) numprim1(
-        .a(SW[0]),
-        .b(SW[1]),
-        .c(SW[2]),
-        .d(SW[3]),
+    num_prim numprim1 (
+        .a(SW[3]),   
+        .b(SW[2]),
+        .c(SW[1]),
+        .d(SW[0]),   
         .out(LEDR[0])
     );
-endmodule   
+
+endmodule 
