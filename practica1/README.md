@@ -23,7 +23,12 @@ Durante la simulación se generó un archivo .vcd para observar las formas de on
 <img width="1936" height="197" alt="image" src="https://github.com/user-attachments/assets/da6c07de-6e57-4d78-b5ad-3ff9a142a64d" />
 
 La salida es 1 únicamente cuando el número corresponde a un primo. Para valores como 0 y 15 la salida permanece en 0, lo que confirma que la función booleana implementada es correcta.
-*Nota: Aunque no fue posible probar el diseño directamente en el FPGA, la validación por simulación demuestra que el comportamiento del sistema es el esperado, lo que garantiza que, al implementarse físicamente en el FPGA, el sistema debería funcionar correctamente.
+
+##video demostrativo 
+https://drive.google.com/file/d/176wm5JKxSb1lU10sASC33awN5NF6hjsd/view?usp=drivesdk
+
+##Resultados
+Como se puede apreciar en el video demostrativo, se logra detectar números primos por medio del led LEDR0 exitosamente. 
 
 ## Aprendizajes y conclusiones
 En esta práctica se reforzaron varios conceptos, entre ellos la implementación de funciones booleanas, la conexión e intsaciación entre módulos y la importancia del test bench para validar resultados. Aparte hubo el aprendizaje personal de verificar con más cuidado las expresiones booleanas, ya que son los pequeños errores los que pueden arruinar el funcionamiento entero. 
