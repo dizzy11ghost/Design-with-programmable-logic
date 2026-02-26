@@ -24,10 +24,10 @@ Durante la simulación se generó un archivo .vcd para observar las formas de on
 
 La salida es 1 únicamente cuando el número corresponde a un primo. Para valores como 0 y 15 la salida permanece en 0, lo que confirma que la función booleana implementada es correcta.
 
-##video demostrativo 
+## Video demostrativo 
 https://drive.google.com/file/d/176wm5JKxSb1lU10sASC33awN5NF6hjsd/view?usp=drivesdk
 
-##Resultados
+## Resultados
 Como se puede apreciar en el video demostrativo, se logra detectar números primos por medio del led LEDR0 exitosamente. 
 
 ## Aprendizajes y conclusiones
