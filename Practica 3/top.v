@@ -1,3 +1,7 @@
+//Sophia Leñero Gómez A01639462
+//Diseño con lógica programable (Gpo 101)
+//Practica 3 - Esta práctica implementa un contador de 0 a 100 decendente o ascendente,
+//y muestra en el display de 7 segmentos la cuenta.
 module top(
 	input MAX10_CLK1_50, 
 	input [9:1] SW, //los switches de la tarjeta
