@@ -28,5 +28,5 @@ begin
 	
 	Data_out <= RAM[Data_address];
 end
-
+ 
 endmodule 

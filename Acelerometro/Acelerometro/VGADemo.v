@@ -27,8 +27,9 @@ hysync_generator hvsync_gen (
 
 always @(posedge MAX10_CLK1_50) begin
     if (inDisplayArea)
-        //chess board patter
-        pixel <= ((CounterX[5] ^ CounterY[5]) ? 3'b111 : 3'b000); 
+        //full color background #E57F99 (hex color)
+        //show the angle used in converter module
+        
     else
         pixel <= 3'b000; // Black outside the display area 
 end
