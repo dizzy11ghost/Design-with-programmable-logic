@@ -4,7 +4,7 @@
 
 # Práctica 6 - Protocolo de comunicación UART 
 
-## Descripción del poryecto
+## Descripción del proyecto
   Para esta práctica, se solicitaba crear por medio de Verilog HDL un sistema capaz de generar comunicación entre dos tarjetas FPGA utilizando el protocolo UART (Universal Asynchronus Receiver Transmitter). Este es un protocolo de comunicación serial esencial en el ámbito digital, puesto que es ampliamente utilizado para transmitir datos entre dispositivos sin necesidad de una señal de reloj compartida.
 Para la implementación de este proyecto, se implementó un sistema compuesto de principalmente un transmisor (RX) y un receptor (Tx), ambos integrados por medio de un wrapper que permite tanto el envío como la recepción de datos seriales utilizando un reloj de 50 MHz y una velocidad de transmición de 9600 baudios. A continuación se relata su proceso de realización. 
 
