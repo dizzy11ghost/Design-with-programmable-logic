@@ -1,7 +1,3 @@
-//===========================================================================
-// accel.v
-//===========================================================================
-
 module accel (
 	input clk_10,
 	input clk,
@@ -12,7 +8,7 @@ module accel (
 	output sensor_sclk,
 	inout sensor_sdi,
 	inout sensor_sdo,
-	output pwm_out_x, pwm_out_y_1, pwm_out_y_2, pwm_out_z
+	output pwm_out_x, pwm_out_y_1, pwm_out_y_2, pwm_out_z,
    output wire [15:0] raw_x,
    output wire [15:0] raw_y,
    output wire [15:0] raw_z

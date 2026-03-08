@@ -18,15 +18,11 @@ begin
 	begin
 		RAM[Data_address] <= 'd0;
 	end
-	else
-	begin
-		if(wr_en)
+	else if(wr_en)
 		begin
 			RAM[Data_address] <= Data_in;
 		end
-	end
-	
-	Data_out <= RAM[Data_address];
 end
+assign Data_out = RAM[Data_address]; //lectura asíncrona, fuera del always
  
 endmodule 

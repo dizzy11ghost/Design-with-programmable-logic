@@ -10,8 +10,9 @@ module top(
    //salidas PWM
    output [9:0] ARDUINO_IO
 );
+    //SEÑALES INTERNAS ---------------------------------------------------------
     //datos crudos del acelerómetro
-    wire [15:0] raw_x, raw_y, raw_z //nota agregar y2!
+    wire [15:0] raw_x, raw_y, raw_z; //nota agregar y2!
 
     //para el manejo de la RAM
     wire ram_we; //write enable para la RAM
@@ -22,20 +23,18 @@ module top(
     //bus de datos para la RAM (3 ejes de 16 bits, 48 bits)
     wire [47:0] ram_data_in;
     wire [47:0] ram_data_out;
-    assign ram_data_in = {angle_x, angle_y, angle_z};
+    assign ram_data_in = {raw_x, raw_y, raw_z};
 
     wire [15:0] ram_x = ram_data_out[47:32]; //para el modo automático! primer bloque de datos que contiene x
     wire [15:0] ram_y = ram_data_out[31:16]; //segundo bloque de datos que contiene y
     wire [15:0] ram_z = ram_data_out[15:0]; //tercer bloque de datos que contiene z
-    wire [7:0] auto_angle_X, auto_angle_y, auto_angle_z //ángulos convertidos a 0-180 para el modo automático
+    wire [7:0] auto_angle_X, auto_angle_y, auto_angle_z; //ángulos convertidos a 0-180 para el modo automático
     wire [7:0] mapped_auto_y2 = 8'd180 - auto_angle_y; //CHECAR ESTO!!!! SOLUCIÓN DE MIENTRAS PERO HAY QUE CHECAR DO NOT FORGET!!!
     
     wire pwm_man_x, pwm_man_y, pwm_man_y2, pwm_man_z; //señales pwm para modo manual
     wire pwm_auto_x, pwm_auto_y, pwm_auto_y2, pwm_auto_z; //señales pwm para modo automático
 
-    wire load = ~KEY[1];
-
-    //instanciamos los módulos!!
+    //INSTANCIAS -----------------------------------------------------------------
 	accel WRAP(
         .clk(MAX10_CLK1_50), 
         .rst(KEY[0]), 
@@ -55,21 +54,20 @@ module top(
     fsm states(
         .MAX10_CLK1_50 (MAX10_CLK1_50),
         .KEY(KEY),              // KEY[0]=reset, KEY[1]=mode_select
-        .load(load),             // botón para guardar posición
         .write_enable(ram_we),
         .counter_enable(counter_en),
         .current_state (fsm_state) //para ver el estado actual 
     );
 
     counter cntram (
-        .clk(MAX10_CLK_50),
+        .clk(MAX10_CLK1_50),
 	    .rst(~KEY[0]),
 	    .enable(counter_en),
         .addr(ram_addr)
     );
 
     memory_RAM #(.NBits(48), .NAddr(3)) ram (
-        .clk(MAX10_CLK_50),
+        .clk(MAX10_CLK1_50),
         .rst_a(KEY [0]),
         .wr_en(ram_we),
         .Data_in(ram_data_in),
@@ -78,9 +76,9 @@ module top(
     );
 
     //conversores RAM - ángulo para modo automático
-    converter conv_x (.coord(ram_x), .angle(auto_angle_x));
-    converter conv_y (.coord(ram_y), .angle(auto_angle_y));
-    converter conv_z (.coord(ram_z), .angle(auto_angle_z));
+    converter conv_x (.coord(ram_x), .angle(auto_raw_x));
+    converter conv_y (.coord(ram_y), .angle(auto_raw_y));
+    converter conv_z (.coord(ram_z), .angle(auto_raw_z));
 
     //PWM en modo automático
     pwm #(.MIN(2), .MAX(13)) pwm_ax  (.clk(clk_0), .rst_p(~KEY[0]), .pwm_in(auto_angle_x),   .pwm_out(pwm_auto_x));
@@ -88,7 +86,7 @@ module top(
     pwm #(.MIN(2), .MAX(11)) pwm_ay2 (.clk(clk_0), .rst_p(~KEY[0]), .pwm_in(mapped_auto_y2), .pwm_out(pwm_auto_y2));
     pwm #(.MIN(2), .MAX(13)) pwm_az  (.clk(clk_0), .rst_p(~KEY[0]), .pwm_in(auto_angle_z),   .pwm_out(pwm_auto_z));
 
-    //MUX S3 automático, cualquier otro estado es manual
+    //MULTIPLEXOR para escoger entre datos de auto y man -------------------------
     localparam S3 = 2'd3;
 
     assign ARDUINO_IO[0] = (fsm_state == S3) ? pwm_auto_x   : pwm_man_x;
