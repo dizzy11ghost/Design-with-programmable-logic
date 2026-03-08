@@ -4,17 +4,19 @@ module fsm(
     input load,
 
     output reg counter_enable,
-    output reg write_enable, 
+    output reg write_enable,
+    output wire [1:0] current_state
 );
 
 wire reset = ~KEY[0];
 wire mode_select = KEY[1];
 reg[2:0] count; //para limitar cuántas instrucciones le puede dar el usuario al modo automático!
-reg clk_d;
+wire clk_d;
+assign current_state = state;
 
-clk_divider #(.FREQ(2)) clk(
+clk_divider #(.FREQ(2)) clk_div_inst(
    .clk    (MAX10_CLK1_50),
-   .rst    (~rst),
+   .rst    (reset),
    .clk_div(clk_d)
 );
 
@@ -31,7 +33,7 @@ always @(posedge clk_d or posedge reset) begin //contador limite de load
     if (reset)
         count = 0;
     else if (state == S2 && load) begin
-        if (select_mode == 1)
+        if (mode_select == 1)
             count = count + 1;
     end
 end
@@ -41,7 +43,7 @@ always @(*) begin
     case(state)
         S0: if (reset == 0) next = S1; else next = S0; //IDLE
         S1: if (mode_select == 1) next = S2; else next = S1; //MANUAL
-        S2: if (count < 5) next = S2; else next = S3; //LOAD
+        S2: if (count < 5) next = S3; else next = S2; //LOAD
         S3: next = S3; 
         default: next = S0;
     endcase
@@ -60,7 +62,7 @@ always @(*) begin //aqui se usa @(*) porque el valor de LEDR depende del estado 
             write_enable = 1; //permite escribir en la memoria
             counter_enable = load; //guarda posiciones cuando se usa el botón load
         end
-        S3: begin counter_enable = 1;
+        S3: begin counter_enable = 1; //el contador de la ram avanza sin depender del botón 
         end
     endcase
 end

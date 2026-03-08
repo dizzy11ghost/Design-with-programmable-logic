@@ -13,6 +13,9 @@ module accel (
 	inout sensor_sdi,
 	inout sensor_sdo,
 	output pwm_out_x, pwm_out_y_1, pwm_out_y_2, pwm_out_z
+   output wire [15:0] raw_x,
+   output wire [15:0] raw_y,
+   output wire [15:0] raw_z
 );
 
 // Parámetros
@@ -81,6 +84,11 @@ clk_divider #(.FREQ(60)) DIVISOR_60 (
 
 //Muestreo de datos
 reg [15:0] data_x_reg, data_y_reg_1, data_y_reg_2, data_z_reg;
+
+//datos crudos que nos servirán para el modo automático
+assign raw_x = data_x_reg;
+assign raw_y = data_y_reg_1;
+assign raw_z = data_z_reg; 
 
 always @(posedge clk_2_hz) begin
    data_x_reg <= data_x;
@@ -162,7 +170,7 @@ pwm #(.MIN(2), .MAX(11)) pwm_y_2 (
 );
 
 pwm #(.MIN(2), .MAX(13)) pwm_z (
-   .clk (clk__0),
+   .clk (clk_0),
    .rst_p (~rst),
    .pwm_in (mapped_z[7:0]),
    .pwm_out(pwm_out_z)
