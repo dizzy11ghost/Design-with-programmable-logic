@@ -4,5 +4,4 @@
 
 # Brazo robótico - FPGA
 
-## Diagrama de estados para la FSM
-![alt text](image.png)
+(insertar aquí documentación :P )
