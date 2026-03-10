@@ -8,6 +8,7 @@ module accel (
 	output sensor_sclk,
 	inout sensor_sdi,
 	inout sensor_sdo,
+   input claw, 
 	output pwm_out_x, pwm_out_y_1, pwm_out_y_2, pwm_out_z,
    output wire [15:0] raw_x,
    output wire [15:0] raw_y,
