@@ -6,10 +6,12 @@
 
 ## Introducción
 
-## Conceptualización 
-<img width="735" height="810" alt="image" src="https://github.com/user-attachments/assets/89bc57bc-b2a3-4f71-92ab-1788fe53a4ed" />
+## Arquitectura
+<img width="957" height="957" alt="image" src="https://github.com/user-attachments/assets/dc802cd1-97db-4d64-9e61-05b48d069ec6" />
+
 
 ## Diagrama FSM 
-<img width="607" height="493" alt="image" src="https://github.com/user-attachments/assets/e2485b06-f364-4d58-b6bd-598eff258295" />
+<img width="989" height="768" alt="image" src="https://github.com/user-attachments/assets/c6dfa1df-1b7e-46d5-b5c4-432fa316626f" />
+
 
 ## RTL Viewer
