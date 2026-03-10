@@ -18,7 +18,10 @@ La máquina de estados utilizada para esta práctica va acorde al siguiente diag
 
 ## Test bench 
 Para verificar que el sistema estuviera funcionando de manera adecuada, se realizó un test bench usando OSS CAD, GTKWAVE. En esta simulación se genera una señal periódica que emula el reloj de la FPGA y se inicializan las entradas del sistema. Después, se simula un reset para mandar la FSM a estado inicial IDLE. Posteriormente se introduce la secuencia de bits de la contrseña mediante el switch SW0 y activando enter con KEY1 para registrar cada entrada. Durante la simulación se pretendía monitorear especialmente selakes internas como state y las salidas hacia los displays. 
-A continuación se adjunta un screen shot de la simulación, donde se puede ver que se cambia exitosamente de estado, asegurando que la fsm esta funcionando adecuadamente ![alt text](image-1.png) 
+A continuación se adjunta un screen shot de la simulación, donde se puede ver que se cambia exitosamente de estado, asegurando que la fsm esta funcionando adecuadamente ![alt text](image-1.png)
 
-#Conclusiones
+## Demostración del funcionamiento
+A continuación se presenta un video de demostración del funcionamient del sistema, en donde primero se ingresa la contraseña correcta, luego reset y dos pruebas de contraseñas incorrectas. https://drive.google.com/file/d/15mQ-igYbf9wIuRT47qRnGspwl19q9UKZ/view?usp=drivesdk
+
+## Conclusiones
 A manera de conclusión, en esta práctica se ideó, implementó y probó el diseño de una FSM dedicada al ingreso de una contraseña y su correcta validación. Es una práctica en verdad altamente relevante porque permite ver los usos de las FSMs en contextos prácticos de la vida cotidiana. 
