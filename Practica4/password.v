@@ -45,16 +45,16 @@ end
 always @(*) begin
 	case(state)
 		GOOD: begin
-			seg3 = ~7'b1011110; // G
-         seg2 = ~7'b0011101; // O
-         seg1 = ~7'b0011101; // O
-         seg0 = ~7'b0111101; // d
+			seg3 = 7'b0000010; // G
+         seg2 = 7'b1000000; // O
+         seg1 = 7'b1000000; // O
+         seg0 = 7'b0100001; // d
 		end
 		BAD: begin
 			seg3 = ~7'b0000000; // apagado
-         seg2 = ~7'b0011111; // b
-         seg1 = ~7'b1110111; // A
-         seg0 = ~7'b0111101; // d
+         seg2 = 7'b0000011; // b
+         seg1 = 7'b0001000; // A
+         seg0 = 7'b0100001; // d
 		end
 		IDLE: begin
          seg3 = ~7'b0000001; // –
@@ -72,19 +72,21 @@ always @(*) begin
          seg3 = ~7'b0000000;
          seg2 = ~7'b0000000;
          seg1 = ~7'b0000000;
-         seg0 = ~7'b1101101; // 2
+			seg0 = ~7'b0110000;
+          // 2
 		end
 		D3: begin
          seg3 = ~7'b0000000;
          seg2 = ~7'b0000000;
          seg1 = ~7'b0000000;
-         seg0 = ~7'b1111001; // 3
+			seg0 = 7'b0100100;
+          // 3
 		end
 		D4: begin
          seg3 = ~7'b0000000;
          seg2 = ~7'b0000000;
          seg1 = ~7'b0000000;
-         seg0 = ~7'b0110011; // 4
+        seg0 = 7'b0110000;
 		end
 		default: begin
          seg3 = ~7'b0000000;
@@ -96,4 +98,3 @@ always @(*) begin
 end
 
 endmodule
-	
