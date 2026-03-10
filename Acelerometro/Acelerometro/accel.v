@@ -8,7 +8,6 @@ module accel (
 	output sensor_sclk,
 	inout sensor_sdi,
 	inout sensor_sdo,
-   input claw, 
 	output pwm_out_x, pwm_out_y_1, pwm_out_y_2, pwm_out_z,
    output wire [15:0] raw_x,
    output wire [15:0] raw_y,
@@ -110,31 +109,31 @@ module accel (
 	reg [7:0] smooth_x, smooth_y_1, smooth_y_2, smooth_z;
 
 	always @(posedge clk_50_hz) begin
-		if      
-			(smooth_x < angle_x) smooth_x <= smooth_x + ((angle_x - smooth_x) >> 3);
-		else if 
-			(smooth_x > angle_x) smooth_x <= smooth_x - ((smooth_x - angle_x) >> 3);
-	end
-
-	always @(posedge clk_60_hz) begin
-		if      
-			(smooth_y_1 < angle_y_1) smooth_y_1 <= smooth_y_1 + ((angle_y_1 - smooth_y_1) >> 5);
-		else if 
-			(smooth_y_1 > angle_y_1) smooth_y_1 <= smooth_y_1 - ((smooth_y_1 - angle_y_1) >> 5);
-	end
-
-	always @(posedge clk_60_hz) begin
-		if      
-			(smooth_y_2 < angle_y_2) smooth_y_2 <= smooth_y_2 + ((angle_y_2 - smooth_y_2) >> 5);
-		else if 
-			(smooth_y_2 > angle_y_2) smooth_y_2 <= smooth_y_2 - ((smooth_y_2 - angle_y_2) >> 5);
+		if (smooth_x + 3 < angle_x) 
+			smooth_x <= smooth_x + 1;
+		else if (smooth_x > angle_x + 3) 
+			smooth_x <= smooth_x - 1;
 	end
 
 	always @(posedge clk_50_hz) begin
-		if      
-			(smooth_z < angle_z) smooth_z <= smooth_z + ((angle_z - smooth_z) >> 4);
-		else if 
-			(smooth_z > angle_z) smooth_z <= smooth_z - ((smooth_z - angle_z) >> 4);
+		if (smooth_y_1 < angle_y_1) 
+			smooth_y_1 <= smooth_y_1 + 1;
+		else if (smooth_y_1 > angle_y_1) 
+			smooth_y_1 <= smooth_y_1 - 1;
+	end
+
+	always @(posedge clk_50_hz) begin
+		if (smooth_y_2 < angle_y_2) 
+			smooth_y_2 <= smooth_y_2 + 1;
+		else if (smooth_y_2 > angle_y_2) 
+			smooth_y_2 <= smooth_y_2 - 1;
+	end
+
+	always @(posedge clk_60_hz) begin
+		if (smooth_z < angle_z) 
+			smooth_z <= smooth_z + ((angle_z - smooth_z) >> 5);
+		else if (smooth_z > angle_z) 
+			smooth_z <= smooth_z - ((smooth_z - angle_z) >> 5);
 	end
 
 
@@ -154,7 +153,7 @@ module accel (
 	assign mapped_out_z  = mapped_z[7:0];
 
 	// PWM → servos
-	pwm #(.MIN(2), .MAX(13)) pwm_x (
+	pwm #(.MIN(2), .MAX(11)) pwm_x (
 		.clk (clk_0),
 		.rst_p (~rst),
 		.pwm_in (mapped_x[7:0]),

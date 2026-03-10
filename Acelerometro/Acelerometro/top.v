@@ -22,7 +22,7 @@ module top(
         .rst    (~KEY[0]),
         .clk_div(clk_0)
     );
-    wire clk_50hz, clk_60hz, clk_200hz;
+    wire clk_50hz, clk_60hz;
     clk_divider #(.FREQ(50)) clk_div_50 (
         .clk    (MAX10_CLK1_50),
         .rst    (~KEY[0]),
@@ -83,7 +83,6 @@ module top(
         .pwm_out_z    (pwm_man_z)
     );
 
-    reg [3:0] count_auto;
     fsm states(
         .MAX10_CLK1_50 (MAX10_CLK1_50),
         .KEY           (KEY),
@@ -91,8 +90,7 @@ module top(
         .done          (LEDR[0]),
         .write_enable  (ram_we),
         .counter_enable(counter_en),
-        .current_state (fsm_state),
-        .count_out(count_auto)
+        .current_state (fsm_state)
     );
 
     counter cntram(
@@ -144,7 +142,7 @@ module top(
 	 
 	 assign garra = SW[9];
 	 
-	 always @(posedge clk_200hz) begin
+	 always @(posedge clk_60hz) begin
 		if (garra)
 			pwm_garra <= 90;
 		else 
@@ -184,11 +182,10 @@ module top(
 
 	// Multiplexor 
     localparam S3 = 2'd3;
-	wire [7:0] VGA_angle_x, VGA_angle_y, VGA_angle_y2, VGA_angle_z;
-    wire mode;
-    
-    assign mode = (fsm_state == S3) ? 1 : 0;
-	assign VGA_angle_x = (fsm_state == S3) ? smooth_auto_x : mapped_out_x;
+	 wire [7:0] VGA_angle_x, VGA_angle_y, VGA_angle_y2, VGA_angle_z;
+	 wire mode;
+	 assign mode = (fsm_state == S3) ? 1 : 0; 
+	 assign VGA_angle_x = (fsm_state == S3) ? smooth_auto_x : mapped_out_x;
     assign VGA_angle_y = (fsm_state == S3) ? smooth_auto_y1 : mapped_out_y1;
     assign VGA_angle_y2 = (fsm_state == S3) ? smooth_auto_y2 :mapped_out_y2;
     assign VGA_angle_z = (fsm_state == S3) ? smooth_auto_z : mapped_out_z;
@@ -196,7 +193,7 @@ module top(
     assign ARDUINO_IO[1] = (fsm_state == S3) ? pwm_auto_y1  : pwm_man_y1;
     assign ARDUINO_IO[2] = (fsm_state == S3) ? pwm_auto_y2  : pwm_man_y2;
     assign ARDUINO_IO[3] = (fsm_state == S3) ? pwm_auto_z   : pwm_man_z;
-	assign ARDUINO_IO[4] = pwm_garra_out;
+	 assign ARDUINO_IO[4] = pwm_garra_out;
 	 
 	 //VGA
 	 wire [2:0] pixel;
@@ -208,10 +205,9 @@ module top(
 		  .angle_y(VGA_angle_y),
 		  .angle_y2(VGA_angle_y2),
 		  .angle_z(VGA_angle_z),
-          .mode(mode),
-          .load_count(count_auto);
         .hsync_out(VGA_HS),
-        .vsync_out(VGA_VS)
+        .vsync_out(VGA_VS),
+		  .mode (mode)
     );
 	
 	assign VGA_R = {4{pixel[2]}};

@@ -4,8 +4,7 @@ module VGACounterDemo(
     input [7:0] angle_y,
     input [7:0] angle_y2,
     input [7:0] angle_z,
-    input mode, //para automático o manual
-    input load_count, //para la barra de progreso
+    input mode,
     output reg [2:0] pixel,
     output hsync_out,
     output vsync_out
@@ -29,9 +28,9 @@ module VGACounterDemo(
         .inDisplayArea(inDisplayArea)
     );
 
-    // -------------------------------------------------------
-    // Dígitos — nombres correctos y consistentes
-    // -------------------------------------------------------
+
+    // Dígitos
+
     wire [3:0] ax_d0, ax_d1, ax_d2;
     wire [3:0] ay_d0, ay_d1, ay_d2;
     wire [3:0] ay2_d0, ay2_d1, ay2_d2;
@@ -54,7 +53,7 @@ module VGACounterDemo(
     assign az_d2 = (angle_z / 100) % 10;
 
     // -------------------------------------------------------
-    // ASCII — nombres correctos y consistentes
+    // ASCII
     // -------------------------------------------------------
     wire [7:0] ax_ascii0, ax_ascii1, ax_ascii2;
     wire [7:0] ay_ascii0, ay_ascii1, ay_ascii2;
@@ -77,34 +76,10 @@ module VGACounterDemo(
     assign az_ascii1 = az_d1 + "0";
     assign az_ascii2 = az_d2 + "0";
 
-    //progress bar -----------------------------------------
-    parameter bar_x = 150;
-    parameter bar_y = 230;
-    parameter bar_width = 200;
-    parameter bar_height = 10;
-
-    wire [9:0] bar_pos_x; //posición
-    wire [9:0] bar_pos_y;
-
-    assign bar_pos_x = CounterX - bar_x;
-    assign bar_pos_y = CounterY - bar_y;
-
-    wire in_bar_area;
-    assign in_bar_area = 
-        (CounterX >= BAR_X && CounterX < BAR_X + BAR_WIDTH) &&
-        (CounterY >= BAR_Y && CounterY < BAR_Y + BAR_HEIGHT);
-
-    wire [9:0] progress = (load_count*bar_width)/255;
-
-    wire bar_pixel_on;
-    assign bar_pixel_on = in_bar_area && (bar_pos_x < progress );
-
-
-    //mode print --------------------------------------------
     parameter MODE_X = 150;
-    parameter MODE_Y = 250;
+    parameter MODE_Y = 220;  
 
-    wire [2:0] mode_col;
+    wire [3:0] mode_col;    
     wire [3:0] mode_row;
 
     assign mode_col = CounterX - MODE_X;
@@ -114,50 +89,48 @@ module VGACounterDemo(
     assign mode_char_index = (CounterX - MODE_X) >> 3;
 
     reg [7:0] mode_ascii;
-
     always @* begin
         if (mode == 0) begin
-           case(mode_char_index)
-                0: mode_ascii = "M";
-                1: mode_ascii = "A";
-                2: mode_ascii = "N";
-                3: mode_ascii = "U";
-                4: mode_ascii = "A";
-                5: mode_ascii = "L";
-                default: mode_ascii = "";
-           endcase 
+            case(mode_char_index)
+                4'd0: mode_ascii = "M";
+                4'd1: mode_ascii = "A";
+                4'd2: mode_ascii = "N";
+                4'd3: mode_ascii = "U";
+                4'd4: mode_ascii = "A";
+                4'd5: mode_ascii = "L";
+                default: mode_ascii = " ";
+            endcase
         end else begin
             case(mode_char_index)
-                0: mode_ascii = "A";
-                1: mode_ascii = "U";
-                2: mode_ascii = "T";
-                3: mode_ascii = "O";
-                4: mode_ascii = "M";
-                5: mode_ascii = "A";
-                6: mode_ascii = "T";
-                7: mode_ascii = "I";
-                8: mode_ascii = "C";
-                9: mode_ascii = "O";
-                default: mode_ascii = "";
-           endcase 
+                4'd0: mode_ascii = "A";
+                4'd1: mode_ascii = "U";
+                4'd2: mode_ascii = "T";
+                4'd3: mode_ascii = "O";
+                4'd4: mode_ascii = "M";
+                4'd5: mode_ascii = "A";
+                4'd6: mode_ascii = "T";
+                4'd7: mode_ascii = "I";
+                4'd8: mode_ascii = "C";
+                4'd9: mode_ascii = "O";
+                default: mode_ascii = " ";
+            endcase
         end
     end
 
-    wire [11:0] mode_rom_adrr;
+    wire [11:0] mode_rom_addr;
     assign mode_rom_addr = (mode_ascii << 4) + mode_row;
 
-    wire [7:0] mode front_row;
-
-    front_rom front_mode(
+    wire [7:0] mode_font_row;
+    font_rom font_mode(
         .addr(mode_rom_addr),
-        .data(mode_front_row)
+        .data(mode_font_row)
     );
 
     wire mode_pixel_on;
-    assign mode_pixel_on = mode_front_row[7-mode_col];
+    assign mode_pixel_on = mode_font_row[7-mode_col];
+
     // -------------------------------------------------------
-    // Layout en pantalla — 28 caracteres total
-    // Ax:XXX Ay:XXX Ay2:XXX Az:XXX
+    // Ángulos: x:XXX y:XXX y2:XXX z:XXX
     // -------------------------------------------------------
     parameter X_START = 150;
     parameter Y_START = 250;
@@ -167,35 +140,31 @@ module VGACounterDemo(
     assign col = CounterX - X_START;
     assign row = CounterY - Y_START;
 
-    wire [4:0] char_index;  // ← 5 bits para llegar a 28
+    wire [4:0] char_index;
     assign char_index = (CounterX - X_START) >> 3;
 
     reg [7:0] ascii;
     always @* begin
         case(char_index)
-            // "Ax:XXX "
             5'd0:  ascii = "x";
             5'd1:  ascii = ":";
             5'd2:  ascii = ax_ascii2;
             5'd3:  ascii = ax_ascii1;
             5'd4:  ascii = ax_ascii0;
             5'd5:  ascii = " ";
-            // "Ay:XXX "
             5'd6:  ascii = "y";
             5'd7:  ascii = ":";
-            5'd8: ascii = ay_ascii2;
-            5'd9: ascii = ay_ascii1;
+            5'd8:  ascii = ay_ascii2;
+            5'd9:  ascii = ay_ascii1;
             5'd10: ascii = ay_ascii0;
             5'd11: ascii = " ";
-            // "Ay2:XXX "
             5'd12: ascii = "y";
-            5'd13: ascii = "2";   // ← separado en su propio carácter
+            5'd13: ascii = "2";
             5'd14: ascii = ":";
             5'd15: ascii = ay2_ascii2;
             5'd16: ascii = ay2_ascii1;
             5'd17: ascii = ay2_ascii0;
             5'd18: ascii = " ";
-            // "Az:XXX"
             5'd19: ascii = "z";
             5'd20: ascii = ":";
             5'd21: ascii = az_ascii2;
@@ -218,38 +187,26 @@ module VGACounterDemo(
     assign pixel_on = font_row[7-col];
 
     always @(posedge MAX10_CLK1_50) begin
+        if (inDisplayArea) begin
 
-        if(inDisplayArea) begin
-
-            if(CounterX >= X_START && CounterX < X_START + 224 &&
-            CounterY >= Y_START && CounterY < Y_START + 16)
+            if (CounterX >= X_START && CounterX < X_START + 192 &&
+                CounterY >= Y_START && CounterY < Y_START + 16)
             begin
-                if(pixel_on)
-                    pixel <= 3'b111;
-                else
-                    pixel <= 3'b000;
+                pixel <= pixel_on ? 3'b111 : 3'b000;
             end
 
-            else if(CounterX >= MODE_X && CounterX < MODE_X + 80 &&
-                    CounterY >= MODE_Y && CounterY < MODE_Y + 16)
+            else if (CounterX >= MODE_X && CounterX < MODE_X + 88 &&
+                     CounterY >= MODE_Y && CounterY < MODE_Y + 16)
             begin
-                if(mode_pixel_on)
-                    pixel <= 3'b111;
-                else
-                    pixel <= 3'b000;
+                pixel <= mode_pixel_on ? 3'b111 : 3'b000;
             end
 
-            else if (in_bar_area)
-            begin
-                pixel <= bar_pixel_on ? 3'b111 : 3'b001;
-            end
             else
                 pixel <= 3'b000;
 
         end
         else
             pixel <= 3'b000;
-
     end
 
 endmodule

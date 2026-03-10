@@ -5,8 +5,7 @@ module fsm(
     output reg done,
     output reg counter_enable,
     output reg write_enable,
-    output wire [1:0] current_state,
-    output wire [3:0] count_out
+    output wire [1:0] current_state
 );
     wire reset = ~KEY[0];
     wire load  = ~KEY[1];
@@ -25,9 +24,9 @@ module fsm(
 
     parameter S0=0, S1=1, S2=2, S3=3;
     reg [1:0] state, next;
-    reg [2:0] count;
+    reg [3:0] count;
 
-    assign count_out = count;
+	 assign count_out = count;
     assign current_state = state;
 
     // Estado actual

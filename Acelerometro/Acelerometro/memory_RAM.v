@@ -24,4 +24,4 @@ module memory_RAM #(parameter NBits = 24, NAddr = 3)(
 
 	assign Data_out = RAM[Data_address]; 
  
-endmodule
+endmodule 
