@@ -44,22 +44,27 @@ module top(
     // Salidas mapeadas de accel 
     wire [7:0] mapped_out_x, mapped_out_y1, mapped_out_y2, mapped_out_z;
 
-    // RAM de 32 bits
+    //garra en modo manual 
+    wire garra;
+    assign garra = SW[9];
+    wire [7:0] pwm_garra_out;
+    reg  [7:0] pwm_garra;
+
+
+    // RAM de 40 bits
     wire [31:0] ram_data_in  = {mapped_out_x, mapped_out_y1, mapped_out_y2, mapped_out_z};
     wire [31:0] ram_data_out;
-    wire [7:0] ram_angle_x  = ram_data_out[31:24];
-    wire [7:0] ram_angle_y1 = ram_data_out[23:16];
-    wire [7:0] ram_angle_y2 = ram_data_out[15:8];
-    wire [7:0] ram_angle_z  = ram_data_out[7:0];
+    wire [7:0] ram_angle_x  = ram_data_out[39:32];
+    wire [7:0] ram_angle_y1 = ram_data_out[31:24];
+    wire [7:0] ram_angle_y2 = ram_data_out[23:16];
+    wire [7:0] ram_angle_z  = ram_data_out[15:8];
+    wire [7:0] ram_garra = ram_data_out [7:0];
 
     // Smooth 
-    reg [7:0] smooth_auto_x, smooth_auto_y1, smooth_auto_y2, smooth_auto_z;
+    reg [7:0] smooth_auto_x, smooth_auto_y1, smooth_auto_y2, smooth_auto_z, smooth_auto_garra;
 
     wire pwm_man_x, pwm_man_y1, pwm_man_y2, pwm_man_z;
     wire pwm_auto_x, pwm_auto_y1, pwm_auto_y2, pwm_auto_z;
-	 wire garra;
-	 wire [7:0] pwm_garra_out;
-	 reg [7:0] pwm_garra;
 
     // Instancias
     accel WRAP(
@@ -102,7 +107,7 @@ module top(
     );
 
     // RAM de 32 bits con 4 ejes
-    memory_RAM #(.NBits(32), .NAddr(3)) ram(
+    memory_RAM #(.NBits(40), .NAddr(4)) ram(
         .clk         (MAX10_CLK1_50),
         .rst_a       (KEY[0]),
         .wr_en       (ram_we),
@@ -140,14 +145,30 @@ module top(
             smooth_auto_z <= smooth_auto_z - ((smooth_auto_z - ram_angle_z) >> 3);
     end
 	 
-	 assign garra = SW[9];
-	 
+    always @(posedge clk_60hz) begin
+        if (smooth_auto_garra < ram_garra) 
+        smooth_auto_garra <= smooth_auto_garra + 1;
+    else if (smooth_auto_garra > ram_garra)
+        smooth_auto_garra <= smooth_auto_garra - 1;
+    end
 	 always @(posedge clk_60hz) begin
 		if (garra)
 			pwm_garra <= 90;
 		else 
 			pwm_garra <= 0;
 	end
+
+    localparam S3 = 2'd3;
+    //si esta en modo manual, toma la entrada del sw 9, en modo automático toma smooth_auto_garra
+    always @(posedge clk_60hz) begin
+        if (fsm_state == S3)
+            pwm_garra <= smooth_auto_garra;
+        else if (garra)
+            pwm_garra <= 90;
+        else
+            pwm_garra <= 0;
+    end
+
 
 	// PWM automático
     pwm #(.MIN(2), .MAX(13)) pwm_ax(
@@ -181,7 +202,6 @@ module top(
 		  
 
 	// Multiplexor 
-    localparam S3 = 2'd3;
 	 wire [7:0] VGA_angle_x, VGA_angle_y, VGA_angle_y2, VGA_angle_z;
 	 wire mode;
 	 assign mode = (fsm_state == S3) ? 1 : 0; 

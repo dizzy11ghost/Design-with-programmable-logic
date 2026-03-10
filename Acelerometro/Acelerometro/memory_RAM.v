@@ -1,4 +1,4 @@
-module memory_RAM #(parameter NBits = 24, NAddr = 3)(
+module memory_RAM #(parameter NBits = 40, NAddr = 4)(
 	input clk, rst_a,
 	input wr_en,
 	input [NBits - 1 : 0] Data_in,
