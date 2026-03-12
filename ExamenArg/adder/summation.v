@@ -7,7 +7,7 @@
 //tiene que ser hasta 15, ósea 16 bits, ósea 2 a la 4
 //aproach - vamos a utilizar un contador para saber qué sumarle a la suma hasta que el contador llegue a data in
 
-module adder(
+module summation(
     input clk,
     input reset, 
     input wire [3:0] data_in, //dato del usuario, vamos a tomarlo como nuestro CMAX, nuestro limite vaya
