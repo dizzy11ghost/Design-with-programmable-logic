@@ -33,12 +33,12 @@ Con esto ya hecho, se prosiguió a contruir y conectar el brazo y sus motores, p
 ## Arquitectura
 La arquitectura final se definió como se muestra en el diagrama a continuación;
 <img width="945" height="918" alt="image" src="https://github.com/user-attachments/assets/09490837-8258-49e7-b145-860752e2e66a" />
-En esta, podemos ver qu
+Se trata de una arquitectura modular, en donde cada módulo se encarga de una tarea especíica dentro del control del brazo. Posteriormente se profundiza en la funcionalidad de cada uno de los módulos y de la máquina de estados utilizados.
 
 ## Diagrama FSM 
+El control general del funcionamiento se realiza mediante una máquina de estados finistos, la cuál recibe las señales mode_sel, rst y load (para un contador de loads). Esta FSM es la que determina el modo de operación del sistema (manual o automático) y genera las señales de control necesarias para coordinar el acceso y almacenamiento de datos en la memoria.
+
 <img width="989" height="768" alt="image" src="https://github.com/user-attachments/assets/c6dfa1df-1b7e-46d5-b5c4-432fa316626f" />
-
-
 
 ## Descripción de los módulos
 El módulo **clk_divider** recibe el reloj interno del FPGA de 50 MHz y una señal de reinicio (rst), y genera una señal de reloj de salida (clk_div) con una frecuencia menor definida por el parámetro FREQ. La frecuencia de salida se obtiene mediante un contador que incrementa su valor en cada flanco positivo del reloj de entrada. Cuando el contador alcanza un valor calculado como constantNumber = CLK_FREQ / (2 * FREQ), este se reinicia y la señal de salida conmuta su estado lógico, logrando así la división de la frecuencia del reloj.
