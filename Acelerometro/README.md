@@ -4,7 +4,13 @@
 
 # Brazo robótico - FPGA
 
-## Introducción
+## Objetivo
+El objetivo de este reto era poder usar Verilog HDL para implementar un sistema capaz de controlar un brazo robótico de 4 grados de libertad por medio del acelerómetro de una tarjeta FPGA DE10-Lite. El sistema tenía que ser capaz de funcionar en dos modos, el modo manual, en donde la tarjeta obtenía los valores del acelerómetro y los convertía en ángulos correspondientes a cada eje del brazo, para después transformarlos en señales PWM que controlarían los servomotres, permitiendo que siguieran sincronizadamente la tarjeta y su orientación.
+El segundo modo a implementar era el modo automático, en el cuál el usuario le podía cargar al robot una rutina de hasta 5 pasos que sería guardada en una memoria RAM y utilizada más adelante por el robot de manera autónoma. 
+En ambos modos, los ángulos de los diferentes ejes tenían que ser mostrados en un monitor VGA, indicando además en qué modo se encontraba el robot. 
+
+
+##Ideación inicial
 
 ## Arquitectura
 <img width="957" height="957" alt="image" src="https://github.com/user-attachments/assets/dc802cd1-97db-4d64-9e61-05b48d069ec6" />
@@ -37,3 +43,5 @@ El módulo **accel** integra la lectura del acelerómetro ADXL345 vía SPI y la 
 
 
 ## RTL Viewer
+Gracias a la herramienta de RTL Viewer de Quartus es que podemos ver el funcionamiento interno de nuestro sistema, lo que es vital para poder comprenderlo, oprimizarlo y escalarlo. A continuación se adjunta el RTL Viewer del brazo robótico; <img width="1555" height="839" alt="image" src="https://github.com/user-attachments/assets/bb91c48e-5705-4bb4-adce-3b86103eba1d" />
+
