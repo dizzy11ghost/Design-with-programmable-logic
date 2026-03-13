@@ -2,7 +2,7 @@
 #### Gregorio Alejandro Orozco Torres A01641967
 #### A01639462 Sophia Leñero Gómez
 
-# Brazo robótico - FPGA
+# Sistema de control de brazo robótico por medio de una FPGA DE10-Lite
 
 ## Objetivo
 El objetivo de este reto era poder usar Verilog HDL para implementar un sistema capaz de controlar un brazo robótico de 4 grados de libertad por medio del acelerómetro de una tarjeta FPGA DE10-Lite. El sistema tenía que ser capaz de funcionar en dos modos, el modo manual, en donde la tarjeta obtenía los valores del acelerómetro y los convertía en ángulos correspondientes a cada eje del brazo, para después transformarlos en señales PWM que controlarían los servomotres, permitiendo que siguieran sincronizadamente la tarjeta y su orientación.
