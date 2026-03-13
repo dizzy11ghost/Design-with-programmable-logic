@@ -70,7 +70,7 @@ Gracias a la herramienta de RTL Viewer de Quartus es que podemos ver el funciona
 Resultados del brazo funcionando tanto en modo manual como automático, con el movimiento de garra también implementado, además de una breve introducción y conceptualización del proyecto; 
 https://drive.google.com/file/d/14mrwJvIVxQPNWUMQ5MN9XGOmeYwhTrp_/view?usp=sharing
 
-##Conclusiones y aprendizajes
+## Conclusiones y aprendizajes
 Como ingenieros, es vital para nosotros estar en constante búsqueda de retos que nos forcen a pensar de manera creativa, analítica e innovadora, por lo que este reto fue uno de gran aprendizaje, ya que gracias a su nivel de complejidad, se pudieron poner en práctica toda la teoría y práctica vistas en clase, desde conceptos básicos de verilog como lógica combinacional contra lógica secuencial hasta cosas más complejas como filtrado de señales, VGA y control. 
 Fue sin duda un proyecto con varios retos, entre ellos, el quitar todo el ruido de la señal PWM fue sin duda un desafío, por lo que al final se usaron tanto elementos de software y hardware para regularlo. También el uso de un Pin Planner con relación a la VGA fue un obstáculo que requirió paciencia para enfrentar. Pero a pesar de los retos, este proyecto fue sin duda extremadamente enriquecedor y satisfactorio de realizar, dejandonos con muchos aprendizajes. 
 
