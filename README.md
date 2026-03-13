@@ -1,4 +1,4 @@
-#Compendio de prácticas realizadas en Verilog (usando Quartus, Altera) para la clase de lógica programable
+# Compendio de prácticas realizadas en Verilog (usando Quartus, Altera) para la clase de lógica programable
 *Sophia Leñero Gómez A01639462*
 
 
