@@ -10,10 +10,35 @@ El segundo modo a implementar era el modo automático, en el cuál el usuario le
 En ambos modos, los ángulos de los diferentes ejes tenían que ser mostrados en un monitor VGA, indicando además en qué modo se encontraba el robot. 
 
 
-##Ideación inicial
+## Ideación inicial
+Para la ideación inicial, se empezó por definir un boceto preliminar de la arquitectura, idear qué módulos habría que usar y de qué manera conectarlos, además de cómo gestionar la parte de hardware. Fue en este proceso de ideación que se llegó al siguiente boceto de arquitectura del sistema;
+<img width="1187" height="642" alt="image" src="https://github.com/user-attachments/assets/c8ec0f03-ca81-4740-a5d4-87104d405bda" /> 
+Con esto ya hecho, se prosiguió a contruir y conectar el brazo y sus motores, para después iniciar con el proceso de implementación del sistema. 
+
+## Materiales utilizados (Hardware)
+-FPGA DE10-Lite 
+
+-Cable USB blaster
+
+-Chasis de brazo robótico impreso en PLA
+
+-5 micro servomotores de 180°
+
+-Cables DuPont
+
+-Capacitor
+
+-Protoboard
 
 ## Arquitectura
-<img width="957" height="957" alt="image" src="https://github.com/user-attachments/assets/dc802cd1-97db-4d64-9e61-05b48d069ec6" />
+La arquitectura final se definió como se muestra en el diagrama a continuación;
+<img width="945" height="918" alt="image" src="https://github.com/user-attachments/assets/09490837-8258-49e7-b145-860752e2e66a" />
+En esta, podemos ver qu
+
+## Diagrama FSM 
+<img width="989" height="768" alt="image" src="https://github.com/user-attachments/assets/c6dfa1df-1b7e-46d5-b5c4-432fa316626f" />
+
+
 
 ## Descripción de los módulos
 El módulo **clk_divider** recibe el reloj interno del FPGA de 50 MHz y una señal de reinicio (rst), y genera una señal de reloj de salida (clk_div) con una frecuencia menor definida por el parámetro FREQ. La frecuencia de salida se obtiene mediante un contador que incrementa su valor en cada flanco positivo del reloj de entrada. Cuando el contador alcanza un valor calculado como constantNumber = CLK_FREQ / (2 * FREQ), este se reinicia y la señal de salida conmuta su estado lógico, logrando así la división de la frecuencia del reloj.
@@ -37,9 +62,6 @@ El módulo **VGACounterDemo** recibe el reloj del sistema, los ángulos mapeados
 El módulo **top** integra todos los subsistemas del brazo robótico. Recibe el reloj interno de 50 MHz, los botones KEY, los switches SW y la interfaz del acelerómetro GSENSOR, y genera las señales PWM para los cinco servomotores a través de ARDUINO_IO, así como la salida de video VGA. Instancia el módulo accel para la lectura del sensor, la fsm para el control de modos, el counter y la memory_RAM para la grabación y reproducción de posiciones, y VGACounterDemo para la visualización en pantalla. Un conjunto de filtros de rampa suaviza las transiciones entre posiciones en modo automático. Un multiplexor selecciona entre las señales PWM del modo manual (generadas directamente por accel) y las del modo automático (generadas a partir de los datos recuperados de la RAM) según el estado actual de la máquina de estados. La garra se controla mediante SW[9] en modo manual y mediante el valor almacenado en RAM en modo automático.
 
 El módulo **accel** integra la lectura del acelerómetro ADXL345 vía SPI y la generación de señales PWM para cuatro servomotores. Recibe múltiples señales de reloj y de interfaz SPI, y expone como salidas los datos crudos de los tres ejes (raw_x, raw_y, raw_z), los ángulos mapeados (mapped_out_x, mapped_out_y1, mapped_out_y2, mapped_out_z) y las señales PWM correspondientes. Internamente, un PLL genera las frecuencias requeridas para la comunicación SPI. Los datos del sensor se muestrean a 2 Hz y se convierten a ángulos de 0° a 180° mediante instancias del módulo converter. Cada eje cuenta con un filtro de rampa independiente que suaviza el movimiento interpolando gradualmente hacia el ángulo objetivo, con distintas velocidades y estrategias según el eje. Los ángulos suavizados se mapean al rango requerido por cada servo y se alimentan a cuatro instancias del módulo pwm con parámetros MIN y MAX ajustados individualmente.
-
-## Diagrama FSM 
-<img width="989" height="768" alt="image" src="https://github.com/user-attachments/assets/c6dfa1df-1b7e-46d5-b5c4-432fa316626f" />
 
 
 ## RTL Viewer
