@@ -26,7 +26,7 @@ Con esto ya hecho, se prosiguió a contruir y conectar el brazo y sus motores, p
 
 -Cables DuPont
 
--Capacitor
+-Capacitor 2200 uF
 
 -Protoboard
 
